@@ -1,0 +1,99 @@
+<template>
+    <v-container>
+        <v-tabs
+                color="primary"
+                v-model="tab"
+        >
+            <v-tab>Список групп</v-tab>
+            <v-tab>Студенты</v-tab>
+            <v-tab>Предметы</v-tab>
+            <v-tab>Оценки</v-tab>
+        </v-tabs>
+
+        <v-tabs-items v-model="tab">
+            <v-tab-item>
+                <GroupsTable :groups="groups"/>
+            </v-tab-item>
+            <v-tab-item>
+                <StudentsTable :students="students" :group-names="groupNames"/>
+            </v-tab-item>
+            <v-tab-item>
+                <SubjectsTable :subjects="subjects"/>
+            </v-tab-item>
+            <v-tab-item>
+                <PerformancesTable :performances="performances" :subject-names="subjectNames" :student-names="studentNames"/>
+            </v-tab-item>
+        </v-tabs-items>
+
+    </v-container>
+</template>
+
+<script>
+    import groupsApi from 'api/group';
+    import studentsApi from 'api/student';
+    import subjectsApi from 'api/subject';
+    import performancesApi from "api/performance";
+    import GroupsTable from "components/GroupsTable.vue";
+    import StudentsTable from "components/StudentsTable.vue";
+    import SubjectsTable from "components/SubjectsTable.vue";
+    import PerformancesTable from "components/PerformancesTable.vue";
+
+    export default {
+        name: "TestPage",
+        components: {
+            StudentsTable,
+            GroupsTable,
+            SubjectsTable,
+            PerformancesTable
+        },
+        data() {
+            return {
+                tab: null,
+                groups: [],
+                groupNames: [],
+                students: [],
+                studentNames: [],
+                subjects: [],
+                subjectNames: [],
+                performances: []
+            }
+        },
+        created() {
+            groupsApi.get().then(result =>
+                result.json().then(data => {
+                    data.forEach(element => {
+                        this.groups.push(element);
+                        this.groupNames.push({text: element.groupName, value: element});
+                    });
+                })
+            );
+            studentsApi.get().then(result =>
+                result.json().then(data => {
+                    data.forEach(element => {
+                        this.students.push(element);
+                        this.studentNames.push({text: element.studentName, value: element});
+                    });
+                })
+            );
+            subjectsApi.get().then(result =>
+                result.json().then(data => {
+                    data.forEach(element => {
+                        this.subjects.push(element);
+                        this.subjectNames.push({text: element.subjectName, value: element});
+                    });
+                })
+            );
+            performancesApi.get().then(result =>
+                result.json().then(data => {
+                    data.forEach(element => {
+                        this.performances.push(element);
+                    });
+                })
+            );
+        }
+    }
+</script>
+
+<style scoped>
+
+</style>
