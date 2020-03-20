@@ -11,6 +11,8 @@ public class Student {
 
     private String studentName;
 
+    private String passport;
+
     @ManyToOne()
     @JoinColumn(name = "groupNumber")
     private Group group;
@@ -29,5 +31,13 @@ public class Student {
 
     public Group getGroup() {
         return group;
+    }
+
+    public String getPassport() {
+        return passport;
+    }
+
+    public void setPassport(String passport) {
+        this.passport = passport;
     }
 }
