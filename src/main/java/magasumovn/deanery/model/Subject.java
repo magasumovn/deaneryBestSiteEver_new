@@ -11,8 +11,6 @@ public class Subject{
 
     private String subjectName;
 
-    private String courseName;
-
     public Long getSubjectID() {
         return subjectID;
     }
@@ -23,14 +21,6 @@ public class Subject{
 
     public void setSubjectName(String subjectName) {
         this.subjectName = subjectName;
-    }
-
-    public String getCourseName() {
-        return courseName;
-    }
-
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
     }
 }
 
