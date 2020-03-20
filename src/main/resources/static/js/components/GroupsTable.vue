@@ -2,6 +2,7 @@
     <v-data-table
             :headers="groupsHeaders"
             :items="groups"
+            @click:row="test"
             sort-by="id"
             class="elevation-1"
     >
@@ -126,6 +127,9 @@
                     groupsApi.remove(item.groupNumber);
                 }
             },
+            test(value) {
+                console.log(value);
+            }
         },
     }
 </script>
