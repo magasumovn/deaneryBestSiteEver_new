@@ -9,7 +9,7 @@
 
         <v-tabs-items v-model="tab">
             <v-tab-item>
-                <SubjectsTable :subjects="subjects"/>
+                <SubjectsTable/>
             </v-tab-item>
         </v-tabs-items>
 

@@ -7,6 +7,14 @@
     >
         <template v-slot:top>
             <v-toolbar flat color="white">
+                <v-col cols="2" class="mt-5">
+                    <v-select
+                            :items="courses"
+                            v-model="selectedCourse"
+                            label="Курс"
+                            @change="courseChange"
+                    ></v-select>
+                </v-col>
                 <v-spacer/>
                 <v-dialog v-model="subjectsDialog" max-width="500px">
                     <template v-slot:activator="{ on }">
@@ -23,6 +31,10 @@
                                     <v-col cols="12" sm="6" md="4">
                                         <v-text-field v-model="editedSubject.subjectName"
                                                       label="Название предмета"/>
+                                    </v-col>
+                                    <v-col cols="12" sm="6" md="4">
+                                        <v-text-field v-model="editedSubject.courseName"
+                                                      label="Курс"/>
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -60,9 +72,9 @@
 
     export default {
         name: "SubjectsTable",
-        props: ['subjects'],
         data() {
             return {
+                subjects: [],
                 subjectsDialog: false,
                 subjectsHeaders: [
                     {
@@ -74,17 +86,25 @@
                         value: 'subjectName'
                     },
                     {
+                        text: 'Курс',
+                        value: 'courseName'
+                    },
+                    {
                         text: 'Действия',
                         value: 'action'
                     }
                 ],
                 editedSubjectIndex: -1,
                 editedSubject: {
-                    subjectName: ''
+                    subjectName: '',
+                    courseName: ''
                 },
                 defaultSubject: {
-                    subjectName: ''
-                }
+                    subjectName: '',
+                    courseName: ''
+                },
+                courses: ['Все', '1', '2', '3', '4'],
+                selectedCourse: 'Все'
             }
         },
         computed: {
@@ -126,7 +146,26 @@
                     subjectsApi.remove(item.subjectID);
                 }
             },
+            courseChange() {
+                this.subjects = [];
+                subjectsApi.getByCourse(this.selectedCourse).then(result => {
+                    result.json().then(data => {
+                        data.forEach(subject => {
+                            this.subjects.push(subject);
+                        })
+                    })
+                })
+            }
         },
+        created() {
+            subjectsApi.get().then(result =>
+                result.json().then(data => {
+                    data.forEach(element => {
+                        this.subjects.push(element);
+                    });
+                })
+            );
+        }
     }
 </script>
 

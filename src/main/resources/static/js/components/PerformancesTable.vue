@@ -7,6 +7,14 @@
     >
         <template v-slot:top>
             <v-toolbar flat color="white">
+                <v-col cols="2" class="mt-5">
+                    <v-select
+                            :items="marks"
+                            v-model="selectedMark"
+                            label="Оценка"
+                            @change="markChange"
+                    ></v-select>
+                </v-col>
                 <v-spacer/>
                 <v-dialog v-model="performancesDialog" max-width="500px">
                     <template v-slot:activator="{ on }">
@@ -79,12 +87,16 @@
 
 <script>
     import performancesApi from "../api/performance";
+    import studentsApi from "../api/student";
+    import subjectsApi from "../api/subject";
 
     export default {
         name: "PerformancesTable",
-        props: ['performances', 'subjectNames', 'studentNames'],
         data() {
             return {
+                performances: [],
+                subjectNames: [],
+                studentNames: [],
                 performancesDialog: false,
                 performancesHeaders: [
                     {
@@ -120,8 +132,10 @@
                     subject: {},
                     semesterNumber: '',
                     mark: ''
-                }
-            }
+                },
+                marks: ['Все', '2', '3', '4', '5'],
+                selectedMark: 'Все'
+            };
         },
         computed: {
             performancesFormTitle() {
@@ -162,7 +176,40 @@
                     performancesApi.remove(item);
                 }
             },
+            markChange() {
+                this.performances = [];
+                performancesApi.getByMark(this.selectedMark).then(result => {
+                    result.json().then(data => {
+                        data.forEach(perf => {
+                            this.performances.push(perf);
+                        })
+                    })
+                })
+            }
         },
+        created() {
+            studentsApi.get().then(result =>
+                result.json().then(data => {
+                    data.forEach(element => {
+                        this.studentNames.push({text: element.studentName, value: element});
+                    });
+                })
+            );
+            subjectsApi.get().then(result =>
+                result.json().then(data => {
+                    data.forEach(element => {
+                        this.subjectNames.push({text: element.subjectName, value: element});
+                    });
+                })
+            );
+            performancesApi.get().then(result =>
+                result.json().then(data => {
+                    data.forEach(element => {
+                        this.performances.push(element);
+                    });
+                })
+            );
+        }
     }
 </script>
 

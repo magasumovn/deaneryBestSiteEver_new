@@ -32,6 +32,18 @@
                                                       label="Имя студента"/>
                                     </v-col>
                                 </v-row>
+                                <v-row>
+                                    <v-col cols="12" sm="6" md="4">
+                                        <v-text-field v-model="editedStudent.passport"
+                                                      label="Паспорт"/>
+                                    </v-col>
+                                </v-row>
+                                <v-row>
+                                    <v-col cols="12" sm="6" md="4">
+                                        <v-text-field v-model="editedStudent.phoneNumber"
+                                                      label="Номер телефона"/>
+                                    </v-col>
+                                </v-row>
                             </v-container>
                         </v-card-text>
 
@@ -81,6 +93,14 @@
                         value: 'studentName'
                     },
                     {
+                        text: 'Паспорт',
+                        value: 'passport'
+                    },
+                    {
+                        text: 'Номер телефона',
+                        value: 'phoneNumber'
+                    },
+                    {
                         text: 'Название группы',
                         value: 'group.groupName'
                     },
@@ -92,11 +112,15 @@
                 editedStudentIndex: -1,
                 editedStudent: {
                     studentName: '',
-                    group: {}
+                    group: {},
+                    passport: '',
+                    phoneNumber: ''
                 },
                 defaultStudent: {
                     groupName: '',
-                    group: {}
+                    group: {},
+                    passport: '',
+                    phoneNumber: ''
                 }
             }
         },

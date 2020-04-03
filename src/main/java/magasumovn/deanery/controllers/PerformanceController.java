@@ -18,13 +18,17 @@ public class PerformanceController  {
     }
 
     @GetMapping
-    public List<Performance> list(@RequestParam(required = false, defaultValue = "") String studentID)  {
+    public List<Performance> list(@RequestParam(required = false, defaultValue = "") String studentID,
+                                  @RequestParam(required = false, defaultValue = "") String mark
+    )  {
         if (!studentID.isEmpty()) {
             return performanceRepo.getPerformancesByStudent_StudentID(Long.parseLong(studentID));
         }
-        else {
-             return performanceRepo.findAll();
+        if (!mark.isEmpty() && !mark.equals("Все")) {
+            return performanceRepo.getByMark(Integer.parseInt(mark));
         }
+
+        return performanceRepo.findAll();
     }
 
     @PostMapping

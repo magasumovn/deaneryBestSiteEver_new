@@ -19,8 +19,12 @@ public class SubjectController {
     }
 
     @GetMapping
-    public List<Subject> list() {
-        return subjectRepo.findAll();
+    public List<Subject> list(@RequestParam(required = false, defaultValue = "") String course) {
+        if (course.equals("") || course.equals("Все")) {
+            return subjectRepo.findAll();
+        }
+
+        return subjectRepo.findByCourseName(course);
     }
 
     @GetMapping("{id}")

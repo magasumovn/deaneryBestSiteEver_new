@@ -19,7 +19,11 @@ public class StudentController {
     }
 
     @GetMapping
-    public List<Student> list() {
+    public List<Student> list(@RequestParam(required = false, defaultValue = "") String groupName) {
+        if (!groupName.equals("")) {
+            return studentRepo.findByGroupGroupName(groupName);
+        }
+
         return studentRepo.findAll();
     }
 
