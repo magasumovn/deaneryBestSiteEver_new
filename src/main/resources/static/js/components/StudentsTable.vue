@@ -34,14 +34,22 @@
                                 </v-row>
                                 <v-row>
                                     <v-col cols="12" sm="6" md="4">
-                                        <v-text-field v-model="editedStudent.passport"
-                                                      label="Паспорт"/>
+                                        <v-text-field v-model="passport"
+                                                      label="Паспорт"
+                                                      :error-messages="passportErrors"
+                                                      @input="$v.passport.$touch()"
+                                                      @blur="$v.passport.$touch()"
+                                        />
                                     </v-col>
                                 </v-row>
                                 <v-row>
                                     <v-col cols="12" sm="6" md="4">
-                                        <v-text-field v-model="editedStudent.phoneNumber"
-                                                      label="Номер телефона"/>
+                                        <v-text-field v-model="phoneNumber"
+                                                      label="Номер телефона"
+                                                      :error-messages="phoneErrors"
+                                                      @input="$v.phoneNumber.$touch()"
+                                                      @blur="$v.phoneNumber.$touch()"
+                                        />
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -75,10 +83,17 @@
 </template>
 
 <script>
+    import {validationMixin} from 'vuelidate'
+    import {numeric} from 'vuelidate/lib/validators'
     import studentsApi from "../api/student";
 
     export default {
         name: "StudentsTable",
+        mixins: [validationMixin],
+        validations: {
+            passport: {numeric},
+            phoneNumber: {numeric},
+        },
         props: ['students', 'groupNames'],
         data() {
             return {
@@ -121,13 +136,27 @@
                     group: {},
                     passport: '',
                     phoneNumber: ''
-                }
+                },
+                phoneNumber: '',
+                passport: ''
             }
         },
         computed: {
             studentsFormTitle() {
                 return this.editedStudentIndex === -1 ? 'Новый студент' : 'Редактировать';
-            }
+            },
+            phoneErrors() {
+                const errors = [];
+                if (!this.$v.phoneNumber.$dirty) return errors
+                !this.$v.phoneNumber.numeric && errors.push('Номер телефона должен содержать только цифры')
+                return errors
+            },
+            passportErrors() {
+                const errors = [];
+                if (!this.$v.passport.$dirty) return errors
+                !this.$v.passport.numeric && errors.push('Пасспорт должен содержать только цифры')
+                return errors
+            },
         },
         watch: {
             studentsDialog(val) {
@@ -139,21 +168,32 @@
                 this.studentsDialog = false;
                 this.editedStudentIndex = -1;
                 this.editedStudent = Object.assign({}, this.defaultStudent);
+                this.phoneNumber = '';
+                this.passport = '';
             },
             studentSave() {
-                if (this.editedStudentIndex > -1) {
-                    Object.assign(this.students[this.editedStudentIndex], this.editedStudent);
-                    studentsApi.update(this.editedStudent);
+                this.$v.$touch()
+                if (this.$v.$invalid) {
+
                 } else {
-                    studentsApi.save(this.editedStudent).then(result =>
-                        result.json().then(data => this.students.push(data))
-                    );
+                    this.editedStudent.phoneNumber = this.phoneNumber;
+                    this.editedStudent.passport = this.passport;
+                    if (this.editedStudentIndex > -1) {
+                        Object.assign(this.students[this.editedStudentIndex], this.editedStudent);
+                        studentsApi.update(this.editedStudent);
+                    } else {
+                        studentsApi.save(this.editedStudent).then(result =>
+                            result.json().then(data => this.students.push(data))
+                        );
+                    }
+                    this.studentClose();
                 }
-                this.studentClose();
             },
             editStudent(item) {
                 this.editedStudentIndex = this.students.indexOf(item);
                 this.editedStudent = Object.assign({}, item);
+                this.phoneNumber = this.editedStudent.phoneNumber;
+                this.passport = this.editedStudent.passport;
                 this.studentsDialog = true;
             },
             deleteStudent(item) {

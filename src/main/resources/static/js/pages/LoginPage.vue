@@ -26,13 +26,21 @@
                             />
                         </v-col>
                     </v-row>
+                    <div class="text-center ml-5">
+                        <v-btn color="primary" dark type="submit">Войти</v-btn>
+                        <v-alert
+                                class="mt-5"
+                                :value="alert"
+                                :color="alertColor"
+                                dark
+                                border="top"
+                                transition="scale-transition"
+                        >
+                            {{alertMessage}}
+                        </v-alert>
+                    </div>
                 </v-container>
             </v-card-text>
-            <v-card-actions>
-                <div class="text-center ml-5 mt-n7">
-                    <v-btn color="primary" dark type="submit">Войти</v-btn>
-                </div>
-            </v-card-actions>
         </form>
     </v-card>
 </template>
@@ -40,6 +48,18 @@
 <script>
     export default {
         name: "LoginPage",
+        data() {
+            return {
+                alert: false,
+                alertColor: "red",
+                alertMessage: "Неверные логин / пароль"
+            }
+        },
+        beforeMount() {
+            if (this.$route.query.error === null) {
+                this.alert = true;
+            }
+        }
     }
 </script>
 
