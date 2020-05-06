@@ -19,7 +19,8 @@ public class PerformanceController  {
 
     @GetMapping
     public List<Performance> list(@RequestParam(required = false, defaultValue = "") String studentID,
-                                  @RequestParam(required = false, defaultValue = "") String mark
+                                  @RequestParam(required = false, defaultValue = "") String mark,
+                                  @RequestParam(required = false, defaultValue = "") String studentName
     )  {
         if (!studentID.isEmpty()) {
             return performanceRepo.getPerformancesByStudent_StudentID(Long.parseLong(studentID));
@@ -27,7 +28,9 @@ public class PerformanceController  {
         if (!mark.isEmpty() && !mark.equals("Все")) {
             return performanceRepo.getByMark(Integer.parseInt(mark));
         }
-
+        if (!studentName.isEmpty()) {
+            return performanceRepo.getPerformancesByStudent_StudentNameStartsWithIgnoreCase(studentName);
+        }
         return performanceRepo.findAll();
     }
 

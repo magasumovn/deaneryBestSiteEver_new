@@ -19,9 +19,14 @@ public class StudentController {
     }
 
     @GetMapping
-    public List<Student> list(@RequestParam(required = false, defaultValue = "") String groupName) {
+    public List<Student> list(@RequestParam(required = false, defaultValue = "") String groupName,
+                              @RequestParam(required = false, defaultValue = "") String studentName) {
         if (!groupName.equals("")) {
             return studentRepo.findByGroupGroupName(groupName);
+        }
+
+        if (!studentName.equals("")) {
+            return studentRepo.findByStudentNameStartsWithIgnoreCase(studentName);
         }
 
         return studentRepo.findAll();

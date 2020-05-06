@@ -7,14 +7,29 @@
     >
         <template v-slot:top>
             <v-toolbar flat color="white">
-                <v-col cols="2" class="mt-5">
-                    <v-select
-                            :items="marks"
-                            v-model="selectedMark"
-                            label="Оценка"
-                            @change="markChange"
-                    ></v-select>
-                </v-col>
+                <v-row>
+                    <v-col cols="2" class="mt-12">
+                        <v-select
+                                :items="marks"
+                                v-model="selectedMark"
+                                label="Оценка"
+                                @change="markChange"
+                        ></v-select>
+                    </v-col>
+                    <v-col cols="4" class="mt-12">
+                        <v-text-field
+                                v-model="studentName"
+                                label="Поиск по фамилии"
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="3" class="mt-12">
+                        <v-btn
+                                color="primary darken-1"
+                                text
+                                @click="updateList"
+                        >Искать</v-btn>
+                    </v-col>
+                </v-row>
                 <v-spacer/>
                 <v-dialog v-model="performancesDialog" max-width="500px">
                     <template v-slot:activator="{ on }">
@@ -48,7 +63,7 @@
                                         <v-text-field
                                                 v-model="editedPerformance.semesterNumber"
                                                 :disabled="editedPerformanceIndex > -1"
-                                                      label="Номер семестра"/>
+                                                label="Номер семестра"/>
                                     </v-col>
                                     <v-col cols="12" sm="6" md="4">
                                         <v-text-field v-model="editedPerformance.mark"
@@ -134,7 +149,8 @@
                     mark: ''
                 },
                 marks: ['Все', '2', '3', '4', '5'],
-                selectedMark: 'Все'
+                selectedMark: 'Все',
+                studentName: '',
             };
         },
         computed: {
@@ -181,10 +197,24 @@
                 performancesApi.getByMark(this.selectedMark).then(result => {
                     result.json().then(data => {
                         data.forEach(perf => {
-                            this.performances.push(perf);
+                            if (this.studentName === '' ||perf.student.studentName.includes(this.studentName)) {
+                                this.performances.push(perf);
+                            }
                         })
                     })
                 })
+            },
+            updateList() {
+                this.performances = [];
+                performancesApi.getByStudentName(this.studentName).then(result =>
+                    result.json().then(data => {
+                        data.forEach(element => {
+                            if (this.selectedMark === 'Все' || this.selectedMark === element.mark) {
+                                this.performances.push(element);
+                            }
+                        });
+                    })
+                );
             }
         },
         created() {

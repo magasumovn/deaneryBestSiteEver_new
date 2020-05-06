@@ -11,4 +11,6 @@ public interface PerformanceRepo extends JpaRepository<Performance, Long> {
     Performance getPerformanceByStudent_StudentIDAndSubject_SubjectIDAndSemesterNumber(long parseLong, long parseLong1, int parseint);
 
     List<Performance> getByMark(int mark);
+
+    List<Performance> getPerformancesByStudent_StudentNameStartsWithIgnoreCase(String studentName);
 }

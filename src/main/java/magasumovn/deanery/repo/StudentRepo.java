@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface StudentRepo extends JpaRepository<Student, Long> {
     List<Student> findByGroupGroupName(String groupName);
+
+    List<Student> findByStudentNameStartsWithIgnoreCase(String stidentName);
 }
