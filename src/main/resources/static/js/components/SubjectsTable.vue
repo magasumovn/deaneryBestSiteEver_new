@@ -18,7 +18,7 @@
                 <v-spacer/>
                 <v-dialog v-model="subjectsDialog" max-width="500px">
                     <template v-slot:activator="{ on }">
-                        <v-btn color="primary" dark class="mb-2" v-on="on">Новый предмет</v-btn>
+                        <v-btn color="primary" dark class="mb-2" v-on="on">Добавить предмет</v-btn>
                     </template>
                     <v-card>
                         <v-card-title>
@@ -47,8 +47,8 @@
 
                             <v-card-actions>
                                 <v-spacer/>
-                                <v-btn color="primary darken-1" text @click="subjectsClose">Cancel</v-btn>
-                                <v-btn color="primary darken-1" text @click="subjectsSave">Save</v-btn>
+                                <v-btn color="primary darken-1" text @click="subjectsClose">Отмена</v-btn>
+                                <v-btn color="primary darken-1" text @click="subjectsSave">Сохранить</v-btn>
                             </v-card-actions>
                         </v-form>
                     </v-card>
@@ -83,10 +83,6 @@
                 subjects: [],
                 subjectsDialog: false,
                 subjectsHeaders: [
-                    {
-                        text: 'Номер предмета',
-                        value: 'subjectID'
-                    },
                     {
                         text: 'Название предмета',
                         value: 'subjectName'

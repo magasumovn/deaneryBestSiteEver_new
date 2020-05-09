@@ -3,14 +3,14 @@
         <v-dialog v-model="dialog" max-width="500px">
             <v-card>
                 <v-card-title>
-                    <span class="headline">Список группы {{selectedGroup}}</span>
+                    <span class="headline">Список групп {{selectedGroup}}</span>
                 </v-card-title>
 
                 <v-card-text>
                     <v-container class="mx-auto">
                         <v-row>
                             <v-col cols="4">
-                                <v-label>Имя</v-label>
+                                <v-label>ФИО</v-label>
                             </v-col>
                             <v-col cols="4">
                                 <v-label>Номер телефона</v-label>
@@ -53,7 +53,7 @@
                     <v-spacer/>
                     <v-dialog v-model="groupsDialog" max-width="500px">
                         <template v-slot:activator="{ on }">
-                            <v-btn color="primary" dark class="mb-2" v-on="on">Новая группа</v-btn>
+                            <v-btn color="primary" dark class="mb-2" v-on="on">Добавить группу</v-btn>
                         </template>
                         <v-card>
                             <v-card-title>
@@ -74,8 +74,8 @@
 
                                 <v-card-actions>
                                     <v-spacer/>
-                                    <v-btn color="primary darken-1" text @click="groupsClose">Cancel</v-btn>
-                                    <v-btn color="primary darken-1" text @click="groupsSave">Save</v-btn>
+                                    <v-btn color="primary darken-1" text @click="groupsClose">Отмена</v-btn>
+                                    <v-btn color="primary darken-1" text @click="groupsSave">Сохранить</v-btn>
                                 </v-card-actions>
                             </v-form>
                         </v-card>

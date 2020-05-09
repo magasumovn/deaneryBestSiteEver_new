@@ -29,7 +29,7 @@
                     text
                     href="/groups"
             >
-                Группа
+                Группы
             </v-btn>
             <v-btn
                     v-if="profile"

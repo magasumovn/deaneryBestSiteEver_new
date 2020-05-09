@@ -33,7 +33,7 @@
                                             <v-text-field
                                                     :rules="[rules.required]"
                                                     v-model="editedStudent.studentName"
-                                                    label="Имя студента"/>
+                                                    label="ФИО"/>
                                         </v-col>
                                     </v-row>
                                     <v-row>
@@ -65,8 +65,8 @@
 
                             <v-card-actions>
                                 <v-spacer/>
-                                <v-btn color="primary darken-1" text @click="studentClose">Cancel</v-btn>
-                                <v-btn color="primary darken-1" text @click="studentSave">Save</v-btn>
+                                <v-btn color="primary darken-1" text @click="studentClose">Отмена</v-btn>
+                                <v-btn color="primary darken-1" text @click="studentSave">Сохранить</v-btn>
                             </v-card-actions>
                         </v-form>
                     </v-card>
@@ -109,11 +109,7 @@
                 studentsDialog: false,
                 studentsHeaders: [
                     {
-                        text: 'ID студента',
-                        value: 'studentID'
-                    },
-                    {
-                        text: 'Имя студента',
+                        text: 'ФИО',
                         value: 'studentName'
                     },
                     {

@@ -27,7 +27,7 @@
                                 color="primary darken-1"
                                 text
                                 @click="updateList"
-                        >Искать
+                        >Поиск
                         </v-btn>
                     </v-col>
                 </v-row>
@@ -82,8 +82,8 @@
 
                             <v-card-actions>
                                 <v-spacer/>
-                                <v-btn color="primary darken-1" text @click="performanceClose">Cancel</v-btn>
-                                <v-btn color="primary darken-1" text @click="performanceSave">Save</v-btn>
+                                <v-btn color="primary darken-1" text @click="performanceClose">Отмена</v-btn>
+                                <v-btn color="primary darken-1" text @click="performanceSave">Сохранить</v-btn>
                             </v-card-actions>
                         </v-form>
                     </v-card>

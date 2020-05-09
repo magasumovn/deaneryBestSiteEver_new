@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import LoginPage from "pages/LoginPage.vue"
-import TablesPage from "pages/TablesPage.vue"
 import Groups from "pages/Groups.vue";
 import Performance from "pages/Performance.vue";
 import Students from "pages/Students.vue";
