@@ -60,22 +60,24 @@
                                 <span class="headline">{{ groupsFormTitle }}</span>
                             </v-card-title>
 
-                            <v-card-text>
-                                <v-container>
-                                    <v-row>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field v-model="editedGroup.groupName"
-                                                          label="Название группы"/>
-                                        </v-col>
-                                    </v-row>
-                                </v-container>
-                            </v-card-text>
+                            <v-form ref="form">
+                                <v-card-text>
+                                    <v-container>
+                                        <v-row>
+                                            <v-col cols="12" sm="6" md="4">
+                                                <v-text-field :rules="[rules.required]" v-model="editedGroup.groupName"
+                                                              label="Название группы"/>
+                                            </v-col>
+                                        </v-row>
+                                    </v-container>
+                                </v-card-text>
 
-                            <v-card-actions>
-                                <v-spacer/>
-                                <v-btn color="primary darken-1" text @click="groupsClose">Cancel</v-btn>
-                                <v-btn color="primary darken-1" text @click="groupsSave">Save</v-btn>
-                            </v-card-actions>
+                                <v-card-actions>
+                                    <v-spacer/>
+                                    <v-btn color="primary darken-1" text @click="groupsClose">Cancel</v-btn>
+                                    <v-btn color="primary darken-1" text @click="groupsSave">Save</v-btn>
+                                </v-card-actions>
+                            </v-form>
                         </v-card>
                     </v-dialog>
                 </v-toolbar>
@@ -132,7 +134,11 @@
                 },
                 selectedGroup: '',
                 groupStudents: [],
-                dialog: false
+                dialog: false,
+                action: 0,
+                rules: {
+                    required: value => value.length > 0 || 'Заполните поле!'
+                }
             }
         },
         computed: {
@@ -152,22 +158,26 @@
                 this.editedGroup = Object.assign({}, this.defaultGroup);
             },
             groupsSave() {
-                if (this.editedGroupIndex > -1) {
-                    Object.assign(this.groups[this.editedGroupIndex], this.editedGroup);
-                    groupsApi.update(this.editedGroup);
-                } else {
-                    groupsApi.save(this.editedGroup).then(result =>
-                        result.json().then(data => this.groups.push(data))
-                    );
+                if ((this.$refs.form.validate())) {
+                    if (this.editedGroupIndex > -1) {
+                        Object.assign(this.groups[this.editedGroupIndex], this.editedGroup);
+                        groupsApi.update(this.editedGroup);
+                    } else {
+                        groupsApi.save(this.editedGroup).then(result =>
+                            result.json().then(data => this.groups.push(data))
+                        );
+                    }
+                    this.groupsClose();
                 }
-                this.groupsClose();
             },
             editGroup(item) {
+                this.action = 1;
                 this.editedGroupIndex = this.groups.indexOf(item);
                 this.editedGroup = Object.assign({}, item);
                 this.groupsDialog = true;
             },
             deleteGroup(item) {
+                this.action = 1;
                 const index = this.groups.indexOf(item);
                 let isDeleted = confirm('Удалить группу ?') && this.groups.splice(index, 1);
                 if (isDeleted) {
@@ -175,16 +185,20 @@
                 }
             },
             openDialog(value) {
-                this.groupStudents = [];
-                this.selectedGroup = value.groupName;
-                studentApi.getByGroup(value.groupName).then(result => {
-                    result.json().then(data => {
-                        data.forEach(student => {
-                            this.groupStudents.push(student);
+                if (this.action !== 1) {
+                    this.groupStudents = [];
+                    this.selectedGroup = value.groupName;
+                    studentApi.getByGroup(value.groupName).then(result => {
+                        result.json().then(data => {
+                            data.forEach(student => {
+                                this.groupStudents.push(student);
+                            })
                         })
-                    })
-                });
-                this.dialog = true;
+                    });
+                    this.dialog = true;
+                } else {
+                    this.action = 0;
+                }
             },
             closeDialog() {
                 this.dialog = false;

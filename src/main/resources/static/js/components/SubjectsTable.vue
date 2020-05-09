@@ -25,26 +25,32 @@
                             <span class="headline">{{ subjectsFormTitle }}</span>
                         </v-card-title>
 
-                        <v-card-text>
-                            <v-container>
-                                <v-row>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-text-field v-model="editedSubject.subjectName"
-                                                      label="Название предмета"/>
-                                    </v-col>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-text-field v-model="editedSubject.courseName"
-                                                      label="Курс"/>
-                                    </v-col>
-                                </v-row>
-                            </v-container>
-                        </v-card-text>
+                        <v-form ref="form">
+                            <v-card-text>
+                                <v-container>
+                                    <v-row>
+                                        <v-col cols="12" sm="6" md="4">
+                                            <v-text-field
+                                                    :rules="[rules.required]"
+                                                    v-model="editedSubject.subjectName"
+                                                    label="Название предмета"/>
+                                        </v-col>
+                                        <v-col cols="12" sm="6" md="4">
+                                            <v-text-field
+                                                    :rules="[rules.required]"
+                                                    v-model="editedSubject.courseName"
+                                                    label="Курс"/>
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
+                            </v-card-text>
 
-                        <v-card-actions>
-                            <v-spacer/>
-                            <v-btn color="primary darken-1" text @click="subjectsClose">Cancel</v-btn>
-                            <v-btn color="primary darken-1" text @click="subjectsSave">Save</v-btn>
-                        </v-card-actions>
+                            <v-card-actions>
+                                <v-spacer/>
+                                <v-btn color="primary darken-1" text @click="subjectsClose">Cancel</v-btn>
+                                <v-btn color="primary darken-1" text @click="subjectsSave">Save</v-btn>
+                            </v-card-actions>
+                        </v-form>
                     </v-card>
                 </v-dialog>
             </v-toolbar>
@@ -104,7 +110,10 @@
                     courseName: ''
                 },
                 courses: ['Все', '1', '2', '3', '4'],
-                selectedCourse: 'Все'
+                selectedCourse: 'Все',
+                rules: {
+                    required: value => value.length > 0 || 'Заполните поле!',
+                }
             }
         },
         computed: {
@@ -124,15 +133,17 @@
                 this.editedSubject = Object.assign({}, this.defaultSubject);
             },
             subjectsSave() {
-                if (this.editedSubjectIndex > -1) {
-                    Object.assign(this.subjects[this.editedSubjectIndex], this.editedSubject);
-                    subjectsApi.update(this.editedSubject);
-                } else {
-                    subjectsApi.save(this.editedSubject).then(result =>
-                        result.json().then(data => this.subjects.push(data))
-                    );
+                if ((this.$refs.form.validate())) {
+                    if (this.editedSubjectIndex > -1) {
+                        Object.assign(this.subjects[this.editedSubjectIndex], this.editedSubject);
+                        subjectsApi.update(this.editedSubject);
+                    } else {
+                        subjectsApi.save(this.editedSubject).then(result =>
+                            result.json().then(data => this.subjects.push(data))
+                        );
+                    }
+                    this.subjectsClose();
                 }
-                this.subjectsClose();
             },
             editSubject(item) {
                 this.editedSubjectIndex = this.subjects.indexOf(item);

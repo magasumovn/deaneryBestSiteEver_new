@@ -27,7 +27,8 @@
                                 color="primary darken-1"
                                 text
                                 @click="updateList"
-                        >Искать</v-btn>
+                        >Искать
+                        </v-btn>
                     </v-col>
                 </v-row>
                 <v-spacer/>
@@ -40,44 +41,51 @@
                             <span class="headline">{{ performancesFormTitle }}</span>
                         </v-card-title>
 
-                        <v-card-text>
-                            <v-container>
-                                <v-row>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-select
-                                                v-model="editedPerformance.student"
-                                                :items="studentNames"
-                                                label="Студент"
-                                                :disabled="editedPerformanceIndex > -1"
-                                        />
-                                    </v-col>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-select
-                                                v-model="editedPerformance.subject"
-                                                :items="subjectNames"
-                                                label="Предмет"
-                                                :disabled="editedPerformanceIndex > -1"
-                                        />
-                                    </v-col>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-text-field
-                                                v-model="editedPerformance.semesterNumber"
-                                                :disabled="editedPerformanceIndex > -1"
-                                                label="Номер семестра"/>
-                                    </v-col>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-text-field v-model="editedPerformance.mark"
-                                                      label="Оценка"/>
-                                    </v-col>
-                                </v-row>
-                            </v-container>
-                        </v-card-text>
+                        <v-form ref="form">
+                            <v-card-text>
+                                <v-container>
+                                    <v-row>
+                                        <v-col cols="12" sm="6" md="4">
+                                            <v-select
+                                                    :rules="[rules.required]"
+                                                    v-model="editedPerformance.student"
+                                                    :items="studentNames"
+                                                    label="Студент"
+                                                    :disabled="editedPerformanceIndex > -1"
+                                            />
+                                        </v-col>
+                                        <v-col cols="12" sm="6" md="4">
+                                            <v-select
+                                                    :rules="[rules.required]"
+                                                    v-model="editedPerformance.subject"
+                                                    :items="subjectNames"
+                                                    label="Предмет"
+                                                    :disabled="editedPerformanceIndex > -1"
+                                            />
+                                        </v-col>
+                                        <v-col cols="12" sm="6" md="4">
+                                            <v-text-field
+                                                    :rules="[rules.required]"
+                                                    v-model="editedPerformance.semesterNumber"
+                                                    :disabled="editedPerformanceIndex > -1"
+                                                    label="Номер семестра"/>
+                                        </v-col>
+                                        <v-col cols="12" sm="6" md="4">
+                                            <v-text-field
+                                                    :rules="[rules.required]"
+                                                    v-model="editedPerformance.mark"
+                                                    label="Оценка"/>
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
+                            </v-card-text>
 
-                        <v-card-actions>
-                            <v-spacer/>
-                            <v-btn color="primary darken-1" text @click="performanceClose">Cancel</v-btn>
-                            <v-btn color="primary darken-1" text @click="performanceSave">Save</v-btn>
-                        </v-card-actions>
+                            <v-card-actions>
+                                <v-spacer/>
+                                <v-btn color="primary darken-1" text @click="performanceClose">Cancel</v-btn>
+                                <v-btn color="primary darken-1" text @click="performanceSave">Save</v-btn>
+                            </v-card-actions>
+                        </v-form>
                     </v-card>
                 </v-dialog>
             </v-toolbar>
@@ -151,6 +159,9 @@
                 marks: ['Все', '2', '3', '4', '5'],
                 selectedMark: 'Все',
                 studentName: '',
+                rules: {
+                    required: value => value.length > 0 || 'Заполните поле!'
+                }
             };
         },
         computed: {
@@ -170,15 +181,17 @@
                 this.editedPerformance = Object.assign({}, this.defaultPerformance);
             },
             performanceSave() {
-                if (this.editedPerformanceIndex > -1) {
-                    Object.assign(this.performances[this.editedPerformanceIndex], this.editedPerformance);
-                    performancesApi.update(this.editedPerformance);
-                } else {
-                    performancesApi.save(this.editedPerformance).then(result =>
-                        result.json().then(data => this.performances.push(data))
-                    );
+                if ((this.$refs.form.validate())) {
+                    if (this.editedPerformanceIndex > -1) {
+                        Object.assign(this.performances[this.editedPerformanceIndex], this.editedPerformance);
+                        performancesApi.update(this.editedPerformance);
+                    } else {
+                        performancesApi.save(this.editedPerformance).then(result =>
+                            result.json().then(data => this.performances.push(data))
+                        );
+                    }
+                    this.performanceClose();
                 }
-                this.performanceClose();
             },
             editPerformance(item) {
                 this.editedPerformanceIndex = this.performances.indexOf(item);
@@ -197,7 +210,7 @@
                 performancesApi.getByMark(this.selectedMark).then(result => {
                     result.json().then(data => {
                         data.forEach(perf => {
-                            if (this.studentName === '' ||perf.student.studentName.includes(this.studentName)) {
+                            if (this.studentName === '' || perf.student.studentName.includes(this.studentName)) {
                                 this.performances.push(perf);
                             }
                         })
