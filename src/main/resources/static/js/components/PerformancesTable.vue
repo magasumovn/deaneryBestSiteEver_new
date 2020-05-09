@@ -47,7 +47,7 @@
                                     <v-row>
                                         <v-col cols="12" sm="6" md="4">
                                             <v-select
-                                                    :rules="[rules.required]"
+                                                    :rules="[rules.requiredSelect]"
                                                     v-model="editedPerformance.student"
                                                     :items="studentNames"
                                                     label="Студент"
@@ -56,7 +56,7 @@
                                         </v-col>
                                         <v-col cols="12" sm="6" md="4">
                                             <v-select
-                                                    :rules="[rules.required]"
+                                                    :rules="[rules.requiredSelect]"
                                                     v-model="editedPerformance.subject"
                                                     :items="subjectNames"
                                                     label="Предмет"
@@ -160,7 +160,8 @@
                 selectedMark: 'Все',
                 studentName: '',
                 rules: {
-                    required: value => value.length > 0 || 'Заполните поле!'
+                    required: value => value.length > 0 || 'Заполните поле!',
+                    requiredSelect : value => ("studentName" in value || "subjectName" in value)|| 'Заполните поле!'
                 }
             };
         },
