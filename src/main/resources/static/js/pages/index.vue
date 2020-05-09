@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <v-app-bar app>
-            <v-toolbar-title>Deanery</v-toolbar-title>
+            <v-toolbar-title>Деканат</v-toolbar-title>
 
             <v-divider
                     class="mx-4"
