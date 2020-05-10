@@ -160,8 +160,8 @@
                 selectedMark: 'Все',
                 studentName: '',
                 rules: {
-                    required: value => value.length > 0 || 'Заполните поле!',
-                    requiredSelect : value => ("studentName" in value || "subjectName" in value)|| 'Заполните поле!'
+                    required: value => (!!(value.length > 0 || parseInt(value))) || 'Заполните поле!',
+                    requiredSelect: value => ("studentName" in value || "subjectName" in value) || 'Заполните поле!'
                 }
             };
         },
