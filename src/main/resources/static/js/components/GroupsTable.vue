@@ -3,7 +3,7 @@
         <v-dialog v-model="dialog" max-width="500px">
             <v-card>
                 <v-card-title>
-                    <span class="headline">Группы {{selectedGroup}}</span>
+                    <span class="headline">Группы{{selectedGroup}}</span>
                 </v-card-title>
 
                 <v-card-text>
