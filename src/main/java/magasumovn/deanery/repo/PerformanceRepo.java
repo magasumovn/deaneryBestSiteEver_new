@@ -8,7 +8,8 @@ import java.util.List;
 public interface PerformanceRepo extends JpaRepository<Performance, Long> {
     List<Performance> getPerformancesByStudent_StudentID(long parseLong);
 
-    Performance getPerformanceByStudent_StudentIDAndSubject_SubjectIDAndSemesterNumber(long parseLong, long parseLong1, int parseint);
+    Performance getPerformanceByStudent_StudentIDAndSubject_SubjectIDAndSemesterNumber(long parseLong, long parseLong1,
+                                                                                       int parseint);
 
     List<Performance> getByMark(int mark);
 
