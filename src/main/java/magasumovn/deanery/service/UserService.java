@@ -17,7 +17,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userRepo.findUserByEmail(s);
+        User user = userRepo.findUserByName(s);
 
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
@@ -27,7 +27,7 @@ public class UserService implements UserDetailsService {
     }
 
     public boolean createUser(User user) {
-        User userFromDb = userRepo.findUserByEmail(user.getEmail());
+        User userFromDb = userRepo.findUserByName(user.getName());
 
         if (userFromDb != null) {
             return false;

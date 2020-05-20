@@ -13,14 +13,14 @@
                         <v-col cols="12">
                             <v-text-field
                                     name="username"
-                                    label="login"
+                                    label="Логин"
                                     required
                             />
                         </v-col>
                         <v-col cols="12">
                             <v-text-field
                                     name="password"
-                                    label="Password"
+                                    label="Пароль"
                                     type="password"
                                     required
                             />
